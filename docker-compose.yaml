@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  analyser:
+    build: ./analyser
+    image: protoinct/analyser
+    volumes:
+      - ./analyser:/usr/src/app
+      - ./analyser/node_modules
