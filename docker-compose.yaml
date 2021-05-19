@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   analyser:
@@ -14,3 +14,14 @@ services:
 
   broker:
     image: nats-streaming:0.21.2-alpine3.13
+      - ./analyser/node_modules
+
+  collector:
+    build: ./collector
+    image: protoinct/collector
+    volumes:
+      - ./collector:/usr/src/app
+    ports:
+      - 3000:3000
+    depends_on:
+      - broker

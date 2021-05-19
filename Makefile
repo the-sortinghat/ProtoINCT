@@ -4,5 +4,8 @@ build:
 start_analyser:
 	@docker-compose up analyser
 
-stop_analyser:
-	@docker-compose down
+start_collector:
+	@docker-compose up collector
+
+stop:
+	@docker-compose down 
