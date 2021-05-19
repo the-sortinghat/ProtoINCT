@@ -1,14 +1,18 @@
-import { Database } from "./core/entities/database";
-import { Service } from "./core/entities/service";
+import { SystemServiceInterface } from "./core/adapters/system_service";
 import { System } from "./core/entities/system";
+import { CreateSystem } from "./core/usecases/create_system";
 
-const svc = new Service("foo");
+class MockService implements SystemServiceInterface {
+  async createSystem(sys: System): Promise<void> {
+    return new Promise((res) => {
+      setTimeout(() => {
+        console.log(sys);
+        res();
+      }, 250);
+    });
+  }
+}
 
-const db = new Database("document", "MongoDB", "foo");
-db.addService(svc);
+const createSystem = new CreateSystem(new MockService());
 
-const sys = new System("foo");
-
-sys.addDatabase(db);
-
-console.log(sys);
+createSystem.run("foo");
