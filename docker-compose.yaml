@@ -6,4 +6,11 @@ services:
     image: protoinct/analyser
     volumes:
       - ./analyser:/usr/src/app
-      - ./analyser/node_modules
+      - /usr/src/app/node_modules
+    env_file:
+      - ./analyser/.env
+    depends_on:
+      - broker
+
+  broker:
+    image: nats-streaming:0.21.2-alpine3.13
