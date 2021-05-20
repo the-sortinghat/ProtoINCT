@@ -1,6 +1,7 @@
+import { AnalyseSystem } from "./core/usecases/analyse_system";
 import { CreateSystem } from "./core/usecases/create_system";
 
-const createSystem = new CreateSystem();
+const createSystem = new CreateSystem(new AnalyseSystem());
 
 const event = {
   type: "system registered",
@@ -22,6 +23,11 @@ const event = {
         model: "document",
         id: 1,
       },
+      {
+        make: "MongoDB",
+        model: "document",
+        id: 2,
+      },
     ],
     databaseUsage: [
       {
@@ -30,7 +36,7 @@ const event = {
       },
       {
         serviceID: 2,
-        databaseID: 1,
+        databaseID: 2,
       },
     ],
   },

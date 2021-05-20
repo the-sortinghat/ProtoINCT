@@ -2,6 +2,7 @@ import { ID, Namespace } from "../entities/types.d";
 import { Database } from "../entities/database";
 import { Service } from "../entities/service";
 import { System } from "../entities/system";
+import { AnalyseSystem } from "./analyse_system";
 
 export interface ServicePayloadInterface {
   name: string;
@@ -28,6 +29,8 @@ export interface CreateSystemPayloadInterface {
 }
 
 export class CreateSystem {
+  constructor(private analyseUseCase: AnalyseSystem) {}
+
   run(payload: CreateSystemPayloadInterface): void {
     const system = this.instanciateSystem(payload);
 
@@ -36,6 +39,8 @@ export class CreateSystem {
 
     const services = this.instanciateAllServices(payload);
     this.relateServicesToDatabases(services, databases, payload.databaseUsage);
+
+    this.analyseUseCase.run(system);
   }
 
   private instanciateSystem(payload: CreateSystemPayloadInterface): System {

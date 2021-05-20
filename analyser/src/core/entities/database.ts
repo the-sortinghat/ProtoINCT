@@ -5,6 +5,11 @@ interface NamespaceServiceMapping {
   [namespace: string]: Service[];
 }
 
+export interface AttachedServices {
+  namespaced: NamespaceServiceMapping;
+  free: Service[];
+}
+
 export class Database {
   private _mappedServices: NamespaceServiceMapping;
   private _looseServices: Service[];
@@ -23,8 +28,11 @@ export class Database {
     else this.addLooseService(service);
   }
 
-  public getServices(namespace: MaybeNamespace = null): Service[] {
-    return namespace ? this._mappedServices[namespace] : this._looseServices;
+  public get services(): AttachedServices {
+    return {
+      namespaced: this._mappedServices,
+      free: this._looseServices,
+    };
   }
 
   private addServiceToNamespace(service: Service, namespace: Namespace): void {
