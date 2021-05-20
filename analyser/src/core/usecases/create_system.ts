@@ -1,5 +1,4 @@
 import { ID, Namespace } from "../entities/types.d";
-import { SystemServiceInterface } from "../adapters/system_service";
 import { Database } from "../entities/database";
 import { Service } from "../entities/service";
 import { System } from "../entities/system";
@@ -29,9 +28,7 @@ export interface CreateSystemPayloadInterface {
 }
 
 export class CreateSystem {
-  constructor(private systemService: SystemServiceInterface) {}
-
-  async run(payload: CreateSystemPayloadInterface): Promise<void> {
+  run(payload: CreateSystemPayloadInterface): void {
     const system = this.instanciateSystem(payload);
 
     const databases = this.instanciateAllDatabases(payload);
@@ -39,8 +36,6 @@ export class CreateSystem {
 
     const services = this.instanciateAllServices(payload);
     this.relateServicesToDatabases(services, databases, payload.databaseUsage);
-
-    await this.systemService.createSystem(system);
   }
 
   private instanciateSystem(payload: CreateSystemPayloadInterface): System {
