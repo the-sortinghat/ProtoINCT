@@ -2,8 +2,11 @@ import { Database } from "../entities/database";
 import { System } from "../entities/system";
 import { Service } from "../entities/service";
 import { ID, Namespace } from "../entities/types";
+import { MessageBrokerClientInterface } from "../adapters/message_broker_client";
 
 export class AnalyseSystem {
+  constructor(private brokerClient: MessageBrokerClientInterface) {}
+
   public run(system: System): void {
     const sharedDatabase: any[] = [];
     const databasePerService: any[] = [];
@@ -70,9 +73,14 @@ export class AnalyseSystem {
       }
     });
 
-    console.log("sharedDatabase");
-    console.log(sharedDatabase);
-    console.log("databasePerService");
-    console.log(databasePerService);
+    const event = {
+      type: "system analysed",
+      payload: {
+        sharedDatabase,
+        databasePerService,
+      },
+    };
+
+    this.brokerClient.publish("system_analysed", JSON.stringify(event));
   }
 }

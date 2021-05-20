@@ -1,7 +1,16 @@
+import { MessageBrokerClientInterface } from "./core/adapters/message_broker_client";
+import { Message } from "./core/entities/types";
 import { AnalyseSystem } from "./core/usecases/analyse_system";
 import { CreateSystem } from "./core/usecases/create_system";
 
-const createSystem = new CreateSystem(new AnalyseSystem());
+class MockClient implements MessageBrokerClientInterface {
+  publish(channel: string, message: Message) {
+    console.log(channel, message);
+  }
+}
+
+const analyseUseCase = new AnalyseSystem(new MockClient());
+const createSystem = new CreateSystem(analyseUseCase);
 
 const event = {
   type: "system registered",
