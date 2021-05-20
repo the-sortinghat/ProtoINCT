@@ -1,15 +1,14 @@
-import { MessageBrokerClientInterface } from "./core/adapters/message_broker_client";
-import { Message } from "./core/entities/types";
 import { AnalyseSystem } from "./core/usecases/analyse_system";
 import { CreateSystem } from "./core/usecases/create_system";
+import { NATSStreamingClient } from "./framework/nats_streaming_client";
 
-class MockClient implements MessageBrokerClientInterface {
-  publish(channel: string, message: Message) {
-    console.log(channel, message);
-  }
-}
+const stan = new NATSStreamingClient(
+  process.env.BROKER_CLUSTER_ID as string,
+  process.env.BROKER_CLIENT_ID as string,
+  process.env.BROKER_URL
+);
 
-const analyseUseCase = new AnalyseSystem(new MockClient());
+const analyseUseCase = new AnalyseSystem(stan);
 const createSystem = new CreateSystem(analyseUseCase);
 
 const event = {
@@ -51,4 +50,12 @@ const event = {
   },
 };
 
-createSystem.run(event.payload);
+stan.subscribe("system_registered", { fromTheBeginning: true }, (msg: any) => {
+  const { payload } = JSON.parse(msg.getData());
+
+  createSystem.run(payload);
+});
+
+stan.publish("system_registered", JSON.stringify(event));
+
+stan.start();
