@@ -75,6 +75,7 @@ export class AnalyseSystem {
 
     const event = {
       type: "system analysed",
+      systemName: system.name,
       payload: {
         sharedDatabase,
         databasePerService,
