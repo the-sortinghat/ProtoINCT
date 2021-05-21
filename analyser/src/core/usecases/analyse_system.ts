@@ -32,7 +32,8 @@ export class AnalyseSystem {
               acc.concat(namespaced[curr]),
             []
           )
-          .concat(free);
+          .concat(free)
+          .map(({ id }: Service): ID => id);
 
         sharedDatabase.push({
           databaseID: db.id,
