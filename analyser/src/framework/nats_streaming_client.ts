@@ -39,7 +39,7 @@ export class NATSStreamingClient implements MessageBrokerClientInterface {
       this.outbox.push({ channel, message });
     } else {
       this.conn.publish(channel, message, () => {
-        console.log("published ", message);
+        console.log("[NATSStreamingClient::publish]\t", message, "\n\n");
       });
     }
   }
@@ -56,7 +56,11 @@ export class NATSStreamingClient implements MessageBrokerClientInterface {
     } else {
       const subs = this.conn.subscribe(channel, opts);
       subs.on("message", (msg: any) => {
-        console.log(msg.getData());
+        console.log(
+          "[NATSStreamingClient::subscribe]\t",
+          msg.getData(),
+          "\n\n"
+        );
         callback(msg);
       });
     }
