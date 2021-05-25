@@ -15,6 +15,13 @@ export interface DatabaseUsageInterface extends Document {
   namespace: string;
 }
 
+export interface SystemInterface extends Document {
+  name: string;
+  services: ServiceInterface[];
+  databases: DatabaseInterface[];
+  databaseUsage: DatabaseUsageInterface[];
+}
+
 const serviceSchema = new Schema(
   {
     name: String,
@@ -48,8 +55,19 @@ const databaseUsageSchema = new Schema(
   },
 );
 
-const ServiceModel = model<ServiceInterface>('Service', serviceSchema);
-const DatabaseModel = model<DatabaseInterface>('Database', databaseSchema);
-const DatabaseUsageModel = model<DatabaseUsageInterface>('DatabaseUsage', databaseUsageSchema);
+const systemSchema = new Schema(
+  {
+    name: String,
+    services: [serviceSchema],
+    databases: [databaseSchema],
+    databaseUsage: [databaseUsageSchema],
+  },
+  {
+    timestamps: true,
+    versionKey: false,
+  },
+);
 
-export { ServiceModel, DatabaseModel, DatabaseUsageModel };
+const SystemModel = model<SystemInterface>('System', systemSchema);
+
+export { SystemModel };

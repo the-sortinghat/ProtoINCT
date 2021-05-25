@@ -1,7 +1,7 @@
 import express from 'express';
 import yaml from 'js-yaml';
 import axios from 'axios';
-import { DatabaseInterface, DatabaseModel } from './database/schema';
+import { ServiceInterface, DatabaseInterface, SystemModel } from './database/schema';
 import { setupDatabaseConnection } from './database/connection';
 
 const possibleDatabaseImages = [
@@ -44,11 +44,18 @@ app.post('/register', async (req, res) => {
       return possibleDatabaseImages.find((db) => image.includes(db.dbMake));
     }) as DatabaseInterface[];
 
-  await DatabaseModel.insertMany(databases);
+  const systemServices = Object.keys(services)
+    .filter((container) => {
+      const { image } = services[container];
+      return !image;
+    })
+    .map((container) => ({ name: container })) as ServiceInterface[];
 
-  const resultDBs = await DatabaseModel.find();
+  const system = new SystemModel({ name: repoName, services: systemServices, databases });
 
-  return res.json({ userOrOrgName, repoName, databases: resultDBs });
+  const savedSystem = await system.save();
+
+  return res.json(savedSystem);
 });
 
 app.listen(port, () => {
