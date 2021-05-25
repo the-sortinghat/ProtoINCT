@@ -15,6 +15,14 @@ services:
   broker:
     image: nats-streaming:0.21.2-alpine3.13
 
+  collector_db:
+    image: mongo:4.2-bionic
+    restart: always
+    env_file:
+      - ./collector/.env
+    ports:
+      - 27017:27017
+
   collector:
     build: ./collector
     image: protoinct/collector
@@ -22,5 +30,8 @@ services:
       - ./collector:/usr/src/app
     ports:
       - 3000:3000
+    env_file:
+      - ./collector/.env
     depends_on:
       - broker
+      - collector_db
