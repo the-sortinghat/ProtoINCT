@@ -1,6 +1,17 @@
 import express from 'express';
 import yaml from 'js-yaml';
 import axios from 'axios';
+import { DatabaseInterface, DatabaseModel } from './database/schema';
+import { setupDatabaseConnection } from './database/connection';
+
+const possibleDatabaseImages = [
+  { dbMake: 'mongo', dbModel: 'NoSQL' },
+  { dbMake: 'postgres', dbModel: 'Relational' },
+  { dbMake: 'mysql', dbModel: 'Relational' },
+  { dbMake: 'mariadb', dbModel: 'Relational' },
+  { dbMake: 'redis', dbModel: 'Key-Value' },
+  { dbMake: 'neo4j', dbModel: 'graph' },
+];
 
 const port = process.env.PORT || 3000;
 
@@ -21,11 +32,26 @@ app.post('/register', async (req, res) => {
   const response = await axios.get(url);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const dockerCompose = yaml.load(response.data) as any;
+  const { services } = yaml.load(response.data) as any;
 
-  return res.json({ userOrOrgName, repoName, brokerImage: dockerCompose.services.broker.image });
+  const databases = Object.keys(services)
+    .filter((container) => {
+      const { image } = services[container];
+      return image && possibleDatabaseImages.some((db) => image.includes(db.dbMake));
+    })
+    .map((container) => {
+      const { image } = services[container];
+      return possibleDatabaseImages.find((db) => image.includes(db.dbMake));
+    }) as DatabaseInterface[];
+
+  await DatabaseModel.insertMany(databases);
+
+  const resultDBs = await DatabaseModel.find();
+
+  return res.json({ userOrOrgName, repoName, databases: resultDBs });
 });
 
 app.listen(port, () => {
   console.log('Collector is running!');
+  setupDatabaseConnection();
 });
