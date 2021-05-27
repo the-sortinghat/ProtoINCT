@@ -3,6 +3,9 @@ import yaml from 'js-yaml';
 import axios from 'axios';
 import { ServiceInterface, DatabaseInterface, SystemModel } from './database/schema';
 import { setupDatabaseConnection } from './database/connection';
+import { Database } from './entities/database';
+import { Service } from './entities/service';
+import { System } from './entities/system';
 
 const possibleDatabaseImages = [
   { dbMake: 'mongo', dbModel: 'NoSQL' },
@@ -10,7 +13,7 @@ const possibleDatabaseImages = [
   { dbMake: 'mysql', dbModel: 'Relational' },
   { dbMake: 'mariadb', dbModel: 'Relational' },
   { dbMake: 'redis', dbModel: 'Key-Value' },
-  { dbMake: 'neo4j', dbModel: 'graph' },
+  { dbMake: 'neo4j', dbModel: 'Graph' },
 ];
 
 const port = process.env.PORT || 3000;
@@ -60,5 +63,15 @@ app.post('/register', async (req, res) => {
 
 app.listen(port, () => {
   console.log('Collector is running!');
+
   setupDatabaseConnection();
+
+  const system = new System('sorting-hat');
+  const service = new Service();
+  const db = new Database();
+
+  db.addNeighbor(service, 'sorting-hat-db');
+  system.graph = db;
+
+  console.log(system.graph);
 });

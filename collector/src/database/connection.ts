@@ -14,8 +14,8 @@ export function setupDatabaseConnection(): void {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     })
-    .then((res) => {
-      console.log('Database connected ', res);
+    .then((_) => {
+      console.log('Database connected ');
     })
     .catch((error) => {
       console.log('Error: ', error);
