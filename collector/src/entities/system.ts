@@ -1,9 +1,11 @@
 import { Node } from './node';
 
-export class System {
+export class System extends Node {
   private _graph: Node | undefined = undefined;
 
-  constructor(public readonly name: string) {}
+  constructor(public readonly name: string) {
+    super();
+  }
 
   get graph(): Node | undefined {
     return this._graph;

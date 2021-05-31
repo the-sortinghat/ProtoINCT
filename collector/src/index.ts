@@ -6,6 +6,7 @@ import { setupDatabaseConnection } from './database/connection';
 import { Database } from './entities/database';
 import { Service } from './entities/service';
 import { System } from './entities/system';
+import { PrintVisitor } from './visitors/print_visitor';
 
 const possibleDatabaseImages = [
   { dbMake: 'mongo', dbModel: 'NoSQL' },
@@ -73,5 +74,7 @@ app.listen(port, () => {
   db.addNeighbor(service, 'sorting-hat-db');
   system.graph = db;
 
-  console.log(system.graph);
+  const printVisitor = new PrintVisitor();
+
+  system.graph.accept(printVisitor);
 });

@@ -1,3 +1,4 @@
+import { Visitor } from '../visitors/visitor';
 import { Edge } from './edge';
 import { Node } from './node';
 
@@ -16,5 +17,9 @@ export class Database extends Node {
     }
 
     this._neighbors.push(edge);
+  }
+
+  accept(v: Visitor): void {
+    v.visitDatabase(this);
   }
 }

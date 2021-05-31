@@ -3,5 +3,5 @@ import { Database } from '../entities/database';
 
 export interface Visitor {
   visitService: (s: Service) => void;
-  visitDataBase: (db: Database) => void;
+  visitDatabase: (db: Database) => void;
 }
