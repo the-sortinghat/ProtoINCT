@@ -1,3 +1,4 @@
+import { Visitor } from '../visitors/visitor';
 import { Edge } from './edge';
 
 export abstract class Node {
@@ -15,4 +16,6 @@ export abstract class Node {
     const edge = new Edge(node);
     this._neighbors.push(edge);
   }
+
+  abstract accept(v: Visitor): void;
 }
