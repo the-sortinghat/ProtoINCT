@@ -12,4 +12,8 @@ export class PrintVisitor implements Visitor {
     console.log('Este é um banco de dados. ');
     console.log(db);
   }
+
+  visitSystem(): void {
+    return;
+  }
 }

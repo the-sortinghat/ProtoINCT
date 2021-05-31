@@ -1,17 +1,17 @@
+import { Visitor } from '../visitors/visitor';
+import { Edge } from './edge';
 import { Node } from './node';
 
 export class System extends Node {
-  private _graph: Node | undefined = undefined;
-
   constructor(public readonly name: string) {
     super();
   }
 
-  get graph(): Node | undefined {
-    return this._graph;
-  }
-
-  set graph(node: Node | undefined) {
-    this._graph = node;
+  accept(v: Visitor): void {
+    v.visitSystem(this);
+    this._neighbors.forEach((neighbor: Edge): void => {
+      const node = neighbor.node;
+      node.accept(v);
+    });
   }
 }

@@ -1,6 +1,6 @@
-import { Visitor } from '../visitors/visitor';
-import { Edge } from './edge';
-import { Node } from './node';
+import {Visitor} from '../visitors/visitor';
+import {Edge} from './edge';
+import {Node} from './node';
 
 export class Database extends Node {
   constructor() {
@@ -11,7 +11,7 @@ export class Database extends Node {
     let edge: Edge;
 
     if (namespace) {
-      edge = new Edge(node, { namespace });
+      edge = new Edge(node, {namespace});
     } else {
       edge = new Edge(node);
     }
