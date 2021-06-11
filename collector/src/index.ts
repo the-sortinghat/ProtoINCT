@@ -18,8 +18,8 @@ app.post('/register', RepositoriesController.register);
 app.listen(port, () => {
   console.log('Collector is running!');
 
-  const svc = new Service();
-  const db = new Database();
+  const svc = new Service('foo');
+  const db = new Database('MongoDB', 'document');
 
   const e = new Edge(svc, db, { namespace: 'foo' });
 
