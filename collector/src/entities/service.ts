@@ -1,12 +1,7 @@
-import { Visitor } from '../visitors/visitor';
-import { Node } from './node';
+import { Vertex } from './vertex';
 
-export class Service extends Node {
+export class Service extends Vertex {
   constructor() {
     super();
-  }
-
-  accept(v: Visitor): void {
-    v.visitService(this);
   }
 }

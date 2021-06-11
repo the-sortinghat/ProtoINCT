@@ -1,6 +1,6 @@
-export class Vertex {
+export abstract class Vertex {
   private static nextID = 0;
-  private _id: number;
+  protected _id: number;
 
   constructor() {
     this._id = Vertex.nextID++;
