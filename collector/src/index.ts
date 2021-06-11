@@ -1,20 +1,20 @@
 import express from 'express';
 import yaml from 'js-yaml';
 import axios from 'axios';
-import {ServiceInterface, DatabaseInterface, SystemModel} from './database/schema';
-import {setupDatabaseConnection} from './database/connection';
-import {Database} from './entities/database';
-import {Service} from './entities/service';
-import {System} from './entities/system';
-import {PrintVisitor} from './visitors/print_visitor';
+import { ServiceInterface, DatabaseInterface, SystemModel } from './database/schema';
+import { setupDatabaseConnection } from './database/connection';
+import { Service } from './entities/service';
+import { Database } from './entities/database';
+import { Edge } from './entities/edge';
+import { Graph } from './entities/graph';
 
 const possibleDatabaseImages = [
-  {dbMake: 'mongo', dbModel: 'NoSQL'},
-  {dbMake: 'postgres', dbModel: 'Relational'},
-  {dbMake: 'mysql', dbModel: 'Relational'},
-  {dbMake: 'mariadb', dbModel: 'Relational'},
-  {dbMake: 'redis', dbModel: 'Key-Value'},
-  {dbMake: 'neo4j', dbModel: 'Graph'},
+  { dbMake: 'mongo', dbModel: 'NoSQL' },
+  { dbMake: 'postgres', dbModel: 'Relational' },
+  { dbMake: 'mysql', dbModel: 'Relational' },
+  { dbMake: 'mariadb', dbModel: 'Relational' },
+  { dbMake: 'redis', dbModel: 'Key-Value' },
+  { dbMake: 'neo4j', dbModel: 'Graph' },
 ];
 
 const port = process.env.PORT || 3000;
@@ -23,10 +23,10 @@ const app = express();
 
 app.use(express.json());
 
-app.get('/', (_, res) => res.status(200).json({message: 'Hello'}));
+app.get('/', (_, res) => res.status(200).json({ message: 'Hello' }));
 
 app.post('/register', async (req, res) => {
-  const {repoURL} = req.body;
+  const { repoURL } = req.body;
   const rgx = /(?:https?:\/\/)?(?:www\.)?github\.com\/(.+)\/(.+)\/?/;
   const match = repoURL.match(rgx);
   const userOrOrgName = match[1];
@@ -36,26 +36,26 @@ app.post('/register', async (req, res) => {
   const response = await axios.get(url);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const {services} = yaml.load(response.data) as any;
+  const { services } = yaml.load(response.data) as any;
 
   const databases = Object.keys(services)
     .filter((container) => {
-      const {image} = services[container];
+      const { image } = services[container];
       return image && possibleDatabaseImages.some((db) => image.includes(db.dbMake));
     })
     .map((container) => {
-      const {image} = services[container];
+      const { image } = services[container];
       return possibleDatabaseImages.find((db) => image.includes(db.dbMake));
     }) as DatabaseInterface[];
 
   const systemServices = Object.keys(services)
     .filter((container) => {
-      const {image} = services[container];
+      const { image } = services[container];
       return !image;
     })
-    .map((container) => ({name: container})) as ServiceInterface[];
+    .map((container) => ({ name: container })) as ServiceInterface[];
 
-  const system = new SystemModel({name: repoName, services: systemServices, databases});
+  const system = new SystemModel({ name: repoName, services: systemServices, databases });
 
   const savedSystem = await system.save();
 
@@ -65,16 +65,16 @@ app.post('/register', async (req, res) => {
 app.listen(port, () => {
   console.log('Collector is running!');
 
-  setupDatabaseConnection();
-
-  const system = new System('sorting-hat');
-  const service = new Service();
+  const svc = new Service();
   const db = new Database();
 
-  db.addNeighbor(service, 'sorting-hat-db');
-  system.addNeighbor(service);
-  system.addNeighbor(db);
+  const e = new Edge(svc, db, { namespace: 'foo' });
 
-  const printVisitor = new PrintVisitor();
-  system.accept(printVisitor);
+  const g = new Graph();
+
+  g.addEdge(e);
+
+  console.log(g);
+
+  setupDatabaseConnection();
 });
