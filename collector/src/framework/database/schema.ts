@@ -1,26 +1,6 @@
-import { Schema, Document, model } from 'mongoose';
+import { Schema, model } from 'mongoose';
 
-export interface ServiceInterface extends Document {
-  name: string;
-}
-
-export interface DatabaseInterface extends Document {
-  dbMake: string;
-  dbModel: string;
-}
-
-export interface DatabaseUsageInterface extends Document {
-  serviceID: string;
-  databaseID: string;
-  namespace: string;
-}
-
-export interface SystemInterface extends Document {
-  name: string;
-  services: ServiceInterface[];
-  databases: DatabaseInterface[];
-  databaseUsage: DatabaseUsageInterface[];
-}
+import { SystemInterface } from '../../core/interfaces';
 
 const serviceSchema = new Schema(
   {

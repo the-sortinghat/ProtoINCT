@@ -1,4 +1,4 @@
-import { ServiceInterface, DatabaseInterface } from '../../framework/database/schema';
+import { ServiceInterface, DatabaseInterface } from '../interfaces';
 
 const possibleDatabaseImages = [
   { dbMake: 'mongo', dbModel: 'NoSQL' },
