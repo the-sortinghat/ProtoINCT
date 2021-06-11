@@ -1,4 +1,4 @@
-type Vertex = any;
+import { Vertex } from './vertex';
 
 export class Edge {
   private static nextID = 0;
