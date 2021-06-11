@@ -1,12 +1,12 @@
 import express from 'express';
 import yaml from 'js-yaml';
 import axios from 'axios';
-import { ServiceInterface, DatabaseInterface, SystemModel } from './database/schema';
-import { setupDatabaseConnection } from './database/connection';
-import { Service } from './entities/service';
-import { Database } from './entities/database';
-import { Edge } from './entities/edge';
-import { Graph } from './entities/graph';
+import { ServiceInterface, DatabaseInterface, SystemModel } from './framework/database/schema';
+import { setupDatabaseConnection } from './framework/database/connection';
+import { Service } from './core/entities/service';
+import { Database } from './core/entities/database';
+import { Edge } from './core/entities/edge';
+import { Graph } from './core/entities/graph';
 
 const possibleDatabaseImages = [
   { dbMake: 'mongo', dbModel: 'NoSQL' },
