@@ -1,7 +1,9 @@
+import { Visitable } from '../interfaces/visitable';
+import { Visitor } from '../interfaces/visitor';
 import { Edge } from './edge';
 import { Vertex } from './vertex';
 
-export class Graph {
+export class Graph implements Visitable {
   private _V = 0;
   private _E = 0;
   private _adj: Edge[][] = [];
@@ -61,5 +63,9 @@ export class Graph {
     }
 
     return edges;
+  }
+
+  accept(v: Visitor): void {
+    v.visitGraph(this);
   }
 }

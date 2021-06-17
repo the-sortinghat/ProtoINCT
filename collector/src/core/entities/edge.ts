@@ -1,6 +1,8 @@
+import { Visitable } from '../interfaces/visitable';
+import { Visitor } from '../interfaces/visitor';
 import { Vertex } from './vertex';
 
-export abstract class Edge {
+export abstract class Edge implements Visitable {
   private static nextID = 0;
   private _id: number;
 
@@ -22,5 +24,9 @@ export abstract class Edge {
 
   compareTo(that: Edge): number {
     return this.id - that.id;
+  }
+
+  accept(v: Visitor): void {
+    v.visitEdge(this);
   }
 }
