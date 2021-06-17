@@ -17,7 +17,5 @@ export abstract class Vertex implements Visitable {
     return this.id - that.id;
   }
 
-  accept(v: Visitor): void {
-    v.visitVertex(this);
-  }
+  abstract accept(v: Visitor): void;
 }

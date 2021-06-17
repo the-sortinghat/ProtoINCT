@@ -4,6 +4,7 @@ import { Service } from '../service';
 import { Vertex } from '../vertex';
 import { SendMessageInterface } from '../../interfaces/send_message';
 import { Visitor } from '../../interfaces/visitor';
+import { Database } from '../database';
 
 export class FindServices implements Visitor {
   private graph: Graph | undefined = undefined;
@@ -17,18 +18,24 @@ export class FindServices implements Visitor {
     this.graph.vertices.forEach((v: Vertex): void => v.accept(this));
   }
 
-  visitVertex(v: Vertex): void {
-    const alreadyVisited = this.visitedIds.includes(v.id);
+  visitService(s: Service): void {
+    const alreadyVisited = this.alreadyVisited(s);
 
     if (!alreadyVisited) {
-      this.visitedIds.push(v.id);
+      this.visitedIds.push(s.id);
 
-      if (v instanceof Service) {
-        const { name } = v as Service;
-        this.sendMessage.serviceFound({ name });
-      }
+      this.sendMessage.serviceFound({ name: s.name });
 
-      this.graph?.adj(v).forEach((e: Edge): void => e.accept(this));
+      this.graph?.adj(s).forEach((e: Edge): void => e.accept(this));
+    }
+  }
+
+  visitDatabase(db: Database): void {
+    const alreadyVisited = this.alreadyVisited(db);
+
+    if (!alreadyVisited) {
+      this.visitedIds.push(db.id);
+      this.graph?.adj(db).forEach((e: Edge): void => e.accept(this));
     }
   }
 
@@ -36,7 +43,15 @@ export class FindServices implements Visitor {
     const v = e.either();
     const w = e.other(v);
 
-    v.accept(this);
-    w.accept(this);
+    const alreadyVisited = this.alreadyVisited(v) && this.alreadyVisited(w);
+
+    if (!alreadyVisited) {
+      v.accept(this);
+      w.accept(this);
+    }
+  }
+
+  private alreadyVisited(v: Vertex): boolean {
+    return this.visitedIds.includes(v.id);
   }
 }

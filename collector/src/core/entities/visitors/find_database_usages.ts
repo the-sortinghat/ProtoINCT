@@ -18,8 +18,12 @@ export class FindDatabaseUsages implements Visitor {
     this.graph.edges.forEach((e: Edge): void => e.accept(this));
   }
 
-  visitVertex(v: Vertex): void {
-    this.graph?.adj(v).forEach((e: Edge): void => e.accept(this));
+  visitService(s: Service): void {
+    this.visitVertex(s);
+  }
+
+  visitDatabase(db: Database): void {
+    this.visitVertex(db);
   }
 
   visitEdge(e: Edge): void {
@@ -53,5 +57,9 @@ export class FindDatabaseUsages implements Visitor {
       v.accept(this);
       w.accept(this);
     }
+  }
+
+  private visitVertex(v: Vertex): void {
+    this.graph?.adj(v).forEach((e: Edge): void => e.accept(this));
   }
 }
