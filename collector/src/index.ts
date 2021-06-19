@@ -4,8 +4,8 @@ import { RepositoriesController } from './framework/controllers/repositories_con
 
 import { Service } from './core/entities/service';
 import { Database } from './core/entities/database';
-import { Edge } from './core/entities/edge';
 import { Graph } from './core/entities/graph';
+import { DBSEdge } from './core/entities/dbs_edge';
 
 const port = process.env.PORT || 3000;
 
@@ -21,7 +21,7 @@ app.listen(port, () => {
   const svc = new Service('foo');
   const db = new Database('MongoDB', 'document');
 
-  const e = new Edge(svc, db, { namespace: 'foo' });
+  const e = new DBSEdge(db, svc, { namespace: 'foo' });
 
   const g = new Graph();
 
