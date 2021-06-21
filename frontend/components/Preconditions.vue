@@ -20,8 +20,8 @@
       </li>
 
       <li>
-        The <code>docker-compose.yaml</code> must be named exactly like that and
-        must be placed at the root of the repository
+        The <code class="text-red-300">docker-compose.yaml</code> must be named
+        exactly like that and must be placed at the root of the repository
       </li>
 
       <li>
