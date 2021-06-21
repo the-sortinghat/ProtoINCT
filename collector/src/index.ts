@@ -1,13 +1,8 @@
 import express from 'express';
-import {setupDatabaseConnection} from './framework/database/connection';
-import {RepositoriesController} from './framework/controllers/repositories_controller';
-
-
-import { Service } from './core/entities/service';
-import { Database } from './core/entities/database';
-import { Graph } from './core/entities/graph';
-import { DBSEdge } from './core/entities/dbs_edge';
-
+import { stan } from './framework/broker/stan';
+import { setupListeners } from './framework/broker/setup_listeners';
+import { setupDatabaseConnection } from './framework/database/connection';
+import { RepositoriesController } from './framework/controllers/repositories_controller';
 
 const port = process.env.PORT || 3000;
 
@@ -17,20 +12,16 @@ app.use(express.json());
 
 app.post('/register', RepositoriesController.register);
 
-app.listen(port, () => {
-  console.log('Collector is running!');
+async function bootstrap() {
+  stan.on('connect', async () => {
+    setupListeners();
 
-  const svc = new Service('foo');
-  const db = new Database('foo_db', 'MongoDB', 'document');
+    console.log('- Broker connected');
 
-  const e = new DBSEdge(db, svc, { namespace: 'foo' });
+    await setupDatabaseConnection();
 
+    app.listen(port, () => console.log('\n=== Collector is running! ===\n\n'));
+  });
+}
 
-  const g = new Graph();
-
-  g.addEdge(e);
-
-  console.log(g);
-
-  setupDatabaseConnection();
-});
+bootstrap().catch(console.dir);

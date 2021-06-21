@@ -8,16 +8,14 @@ const mongoDb = process.env.MONGO_DATABASE || 'test';
 
 const mongoUrl = `mongodb://${mongoUser}:${mongoPass}@${mongoHost}:${mongoPort}`;
 
-export function setupDatabaseConnection(): void {
-  mongoose
-    .connect(`${mongoUrl}/${mongoDb}?authSource=admin`, {
+export async function setupDatabaseConnection(): Promise<void> {
+  try {
+    await mongoose.connect(`${mongoUrl}/${mongoDb}?authSource=admin`, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-    })
-    .then((_) => {
-      console.log('Database connected ');
-    })
-    .catch((error) => {
-      console.log('Error: ', error);
     });
+    console.log('- Database connected');
+  } catch (error) {
+    console.log('Error while connecting to database: ', error);
+  }
 }
