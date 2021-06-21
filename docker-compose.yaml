@@ -12,5 +12,16 @@ services:
     depends_on:
       - broker
 
+  frontend:
+    build: ./frontend
+    image: protoinct/frontend
+    volumes:
+      - ./frontend:/usr/src/app
+      - /usr/src/app/node_modules
+    env_file:
+      - ./frontend/.env
+    ports:
+      - 3000:3000
+
   broker:
     image: nats-streaming:0.21.2-alpine3.13

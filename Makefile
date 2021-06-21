@@ -7,5 +7,8 @@ test_analyser:
 start_analyser:
 	@docker-compose up analyser
 
-stop_analyser:
+stop:
 	@docker-compose down
+
+start_frontend:
+	@docker-compose up frontend
