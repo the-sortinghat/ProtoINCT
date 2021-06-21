@@ -1,70 +1,93 @@
 <template>
-  <div class="container">
-    <div>
-      <Logo />
-      <h1 class="title">front</h1>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
+  <div class="container flex flex-col p-2 bg-gray-100 h-screen">
+    <header>
+      <h1 class="text-4xl font-bold text-center my-10">ProtoINCT</h1>
+    </header>
+
+    <main class="flex flex-col">
+      <section
+        class="
+          order-2
+          bg-gray-200
+          pl-4
+          py-5
+          border-indigo-600 border-l-8
+          rounded-md
+          text-indigo-600
+        "
+      >
+        <h2 class="font-bold text-lg">Disclaimer</h2>
+        <p class="my-3 italic">
+          This is still a prototype under constant evolution. There is a list of
+          pre-condition we require to guarantee proper work.
+        </p>
+        <nuxt-link class="underline" to="/">learn more ></nuxt-link>
+      </section>
+
+      <section class="order-1 flex flex-col">
+        <label for="githuburl">GitHub URL:</label>
+        <input
+          id="githuburl"
+          v-model="repoURL"
+          type="text"
+          class="rounded shadow my-2 px-2 py-1 border-2 border-gray-300"
+        />
+
+        <p v-if="hasError" class="-mt-1 pl-2 text-sm text-red-400">
+          {{ error }}
+        </p>
+
+        <button
+          class="
+            my-4
+            py-2
+            shadow-md
+            rounded-md
+            bg-blue-400
+            text-gray-100
+            font-bold
+            text-lg
+          "
+          :disabled="isLoading"
+          @click="submit"
         >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >
-          GitHub
-        </a>
-      </div>
-    </div>
+          submit
+        </button>
+      </section>
+    </main>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import { Component, Vue } from 'vue-property-decorator'
 
-export default Vue.extend({})
+@Component
+export default class App extends Vue {
+  public error: string = ''
+  public repoURL: string = ''
+  public isLoading: boolean = false
+
+  get hasError() {
+    return this.error.length > 0
+  }
+
+  submit() {
+    this.isLoading = true
+
+    const { isValid, reason } = this.validateURL(this.repoURL)
+
+    if (!isValid) this.error = reason
+    else this.error = ''
+
+    this.isLoading = false
+  }
+
+  private validateURL(url: string) {
+    const rgx = /^(https:\/\/)?(www\.)?github.com\/\w+\/\w+$/
+
+    if (!rgx.test(url)) return { isValid: false, reason: 'Invalid URL' }
+
+    return { isValid: true, reason: '' }
+  }
+}
 </script>
-
-<style>
-/* Sample `apply` at-rules with Tailwind CSS
-.container {
-@apply min-h-screen flex justify-center items-center text-center mx-auto;
-}
-*/
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-.title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
-}
-</style>
