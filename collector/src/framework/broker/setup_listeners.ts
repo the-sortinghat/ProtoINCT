@@ -5,9 +5,9 @@ import { stan } from './stan';
 export function setupListeners(): void {
   const replayAllOpts = stan.subscriptionOptions().setDeliverAllAvailable();
 
-  const foundService = stan.subscribe('SERVICE_FOUND', replayAllOpts);
-  const foundDatabase = stan.subscribe('DATABASE_FOUND', replayAllOpts);
-  const foundDatabaseUsage = stan.subscribe('DATABASE_USAGE_FOUND', replayAllOpts);
+  const foundService = stan.subscribe('new.service', replayAllOpts);
+  const foundDatabase = stan.subscribe('new.database', replayAllOpts);
+  const foundDatabaseUsage = stan.subscribe('new.database_usage', replayAllOpts);
 
   foundService.on('message', (msg: Message): void => {
     // register service
