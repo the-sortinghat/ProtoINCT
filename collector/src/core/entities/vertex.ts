@@ -1,4 +1,7 @@
-export abstract class Vertex {
+import { Visitable } from '../interfaces/visitable';
+import { Visitor } from '../interfaces/visitor';
+
+export abstract class Vertex implements Visitable {
   private static nextID = 0;
   protected _id: number;
 
@@ -13,4 +16,6 @@ export abstract class Vertex {
   compareTo(that: Vertex): number {
     return this.id - that.id;
   }
+
+  abstract accept(v: Visitor): void;
 }
