@@ -5,10 +5,13 @@ export default async (
   ds: Dataservice,
   publishAnalysis: (event: any) => void
 ): Promise<void> => {
-  const payload = await ds.getDBperService(name);
-  console.log(payload);
+  const result = await ds.getDBperService(name);
+  console.log(result);
   publishAnalysis({
     type: "system analysed",
-    payload,
+    payload: {
+      name,
+      result,
+    },
   });
 };
