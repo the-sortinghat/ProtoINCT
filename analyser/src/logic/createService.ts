@@ -1,3 +1,3 @@
-export default async (servicePayload: any): Promise<void> => {
+export default async (servicePayload: any, ds: any): Promise<void> => {
   console.log(servicePayload);
 };

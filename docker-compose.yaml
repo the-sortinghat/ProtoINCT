@@ -11,6 +11,17 @@ services:
       - ./analyser/.env
     depends_on:
       - broker
+      - neo4j
 
   broker:
     image: nats-streaming:0.21.2-alpine3.13
+
+  neo4j:
+    image: neo4j
+    env_file:
+      - ./analyser/.env
+    ports:
+      - 7474:7474
+      - 7687:7687
+    volumes:
+      - ./analyser/neo4j-data:/data

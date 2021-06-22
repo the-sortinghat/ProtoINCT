@@ -1,3 +1,3 @@
-export default async (databaseUsagePayload: any): Promise<void> => {
+export default async (databaseUsagePayload: any, ds: any): Promise<void> => {
   console.log(databaseUsagePayload);
 };
