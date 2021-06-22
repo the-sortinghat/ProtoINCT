@@ -1,5 +1,8 @@
 import { Dataservice } from "./dataservice.interface";
 
-export default async (servicePayload: any, ds: Dataservice): Promise<void> => {
-  console.log(servicePayload);
+export default async (
+  { name, systemName }: any,
+  ds: Dataservice
+): Promise<void> => {
+  await ds.createService(name, systemName);
 };

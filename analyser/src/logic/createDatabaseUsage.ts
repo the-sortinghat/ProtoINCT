@@ -4,5 +4,10 @@ export default async (
   databaseUsagePayload: any,
   ds: Dataservice
 ): Promise<void> => {
-  console.log(databaseUsagePayload);
+  const dbName = databaseUsagePayload.databaseName;
+  const svcName = databaseUsagePayload.serviceName;
+  const systemName = databaseUsagePayload.systemName;
+  const namespace = databaseUsagePayload.namespace || null;
+
+  await ds.createDatabaseUsage(dbName, svcName, systemName, namespace);
 };
