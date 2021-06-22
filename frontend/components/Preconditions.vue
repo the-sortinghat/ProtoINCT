@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h2 class="text-xl font-bold mb-4">Preconditions:</h2>
     <p>
       This work is a prototype, it has a narrow scope of implementation yet. The
       conditions under which this tool works are the following:
