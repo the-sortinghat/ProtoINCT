@@ -1,6 +1,6 @@
 import { Vertex } from './vertex';
 
-export class Edge {
+export abstract class Edge {
   private static nextID = 0;
   private _id: number;
 
