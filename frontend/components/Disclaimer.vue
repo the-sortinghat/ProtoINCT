@@ -15,6 +15,6 @@
       This is still a prototype under constant evolution. There is a list of
       pre-condition we require to guarantee proper work.
     </p>
-    <nuxt-link class="underline" to="/">learn more ></nuxt-link>
+    <nuxt-link class="underline md:hidden" to="/preconditions">learn more ></nuxt-link>
   </section>
 </template>
