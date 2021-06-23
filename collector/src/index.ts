@@ -1,5 +1,5 @@
 import express from 'express';
-import { setupDatabaseConnection } from './framework/database/connection';
+import { DatabaseConnection } from './framework/database/connection';
 import { RepositoriesController } from './framework/controllers/repositories_controller';
 
 import { Service } from './core/entities/service';
@@ -15,7 +15,7 @@ app.use(express.json());
 
 app.post('/register', RepositoriesController.register);
 
-app.listen(port, () => {
+app.listen(port, async () => {
   console.log('Collector is running!');
 
   const svc = new Service('foo');
@@ -29,5 +29,5 @@ app.listen(port, () => {
 
   console.log(g);
 
-  setupDatabaseConnection();
+  await DatabaseConnection.connect();
 });
