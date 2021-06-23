@@ -1,11 +1,18 @@
-const mongoHost = process.env.MONGO_HOST || 'localhost';
-const mongoPort = process.env.MONGO_PORT || '27017';
-const mongoUser = process.env.MONGO_INITDB_ROOT_USERNAME || 'root';
-const mongoPass = process.env.MONGO_INITDB_ROOT_PASSWORD || 'root';
-const mongoDb = process.env.MONGO_DATABASE || 'test';
+import { MongoClient } from 'mongodb';
 
-const mongoUrl = `mongodb://${mongoUser}:${mongoPass}@${mongoHost}:${mongoPort}`;
+const defaultUri = 'mongodb://test@test@localhost:27017/test';
+const mongoUri = process.env.MONGO_URI || defaultUri;
 
-export function setupDatabaseConnection(): void {
-  console.log('function not implemented.');
+export async function setupDatabaseConnection(): Promise<void> {
+  try {
+    const client = new MongoClient(mongoUri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+
+    await client.connect();
+    console.log('- database connected');
+  } catch (error) {
+    console.log('- error while connecting to database: ', error);
+  }
 }
