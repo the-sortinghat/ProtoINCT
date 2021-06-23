@@ -1,13 +1,11 @@
 import express from 'express';
-import {setupDatabaseConnection} from './framework/database/connection';
-import {RepositoriesController} from './framework/controllers/repositories_controller';
-
+import { DatabaseConnection } from './framework/database/connection';
+import { RepositoriesController } from './framework/controllers/repositories_controller';
 
 import { Service } from './core/entities/service';
 import { Database } from './core/entities/database';
 import { Graph } from './core/entities/graph';
 import { DBSEdge } from './core/entities/dbs_edge';
-
 
 const port = process.env.PORT || 3000;
 
@@ -17,7 +15,7 @@ app.use(express.json());
 
 app.post('/register', RepositoriesController.register);
 
-app.listen(port, () => {
+app.listen(port, async () => {
   console.log('Collector is running!');
 
   const svc = new Service('foo');
@@ -25,12 +23,11 @@ app.listen(port, () => {
 
   const e = new DBSEdge(db, svc, { namespace: 'foo' });
 
-
   const g = new Graph();
 
   g.addEdge(e);
 
   console.log(g);
 
-  setupDatabaseConnection();
+  await DatabaseConnection.connect();
 });

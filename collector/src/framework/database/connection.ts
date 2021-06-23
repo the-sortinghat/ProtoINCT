@@ -1,23 +1,32 @@
-import mongoose from 'mongoose';
+import { Db, MongoClient } from 'mongodb';
 
-const mongoHost = process.env.MONGO_HOST || 'localhost';
-const mongoPort = process.env.MONGO_PORT || '27017';
-const mongoUser = process.env.MONGO_INITDB_ROOT_USERNAME || 'root';
-const mongoPass = process.env.MONGO_INITDB_ROOT_PASSWORD || 'root';
-const mongoDb = process.env.MONGO_DATABASE || 'test';
+const mongoDb = process.env.MONGO_DB || 'test';
+const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017';
 
-const mongoUrl = `mongodb://${mongoUser}:${mongoPass}@${mongoHost}:${mongoPort}`;
+export class DatabaseConnection {
+  private static client: MongoClient;
 
-export function setupDatabaseConnection(): void {
-  mongoose
-    .connect(`${mongoUrl}/${mongoDb}?authSource=admin`, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    })
-    .then((_) => {
-      console.log('Database connected ');
-    })
-    .catch((error) => {
-      console.log('Error: ', error);
-    });
+  public static async connect(): Promise<void> {
+    if (!this.client) {
+      try {
+        this.client = new MongoClient(mongoUri, {
+          useNewUrlParser: true,
+          useUnifiedTopology: true,
+        });
+
+        await this.client.connect();
+        console.log('- database connected');
+      } catch (error) {
+        console.log('- error while connecting to database: ', error);
+      }
+    }
+  }
+
+  public static async getDb(): Promise<Db> {
+    if (!this.client) {
+      await this.connect();
+    }
+
+    return this.client.db(mongoDb);
+  }
 }
