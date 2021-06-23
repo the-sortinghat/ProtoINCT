@@ -7,5 +7,7 @@
 
       <RepoForm class="order-1 lg:order-2 lg:w-1/2" />
     </main>
+
+    <Preconditions class="hidden md:block md:mx-auto md:mt-10" />
   </div>
 </template>
