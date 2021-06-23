@@ -6,9 +6,8 @@ export default async (
   publishAnalysis: (event: any) => void
 ): Promise<void> => {
   const result = await ds.getDBperService(name);
-  console.log(result);
   publishAnalysis({
-    type: "system analysed",
+    type: "System Analysed",
     payload: {
       name,
       result,
