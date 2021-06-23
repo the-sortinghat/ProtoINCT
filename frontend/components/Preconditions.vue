@@ -13,6 +13,10 @@
       </li>
 
       <li>
+        All services of the project must be placed within the same monorepo
+      </li>
+
+      <li>
         Projects must be configured to use
         <a target="_blank" href="https://docs.docker.com/compose/">
           Docker Compose
@@ -25,17 +29,18 @@
         exactly like that and must be placed at the root of the repository
       </li>
 
+      <li>The only DBMS supported is MongoDB</li>
+
       <li>
-        As the prototype focus on <strong>Database per Service</strong>, there
-        is a list of supported DBMS:
-
-        <ul class="ml-8 list-disc list-inside">
-          <li>MongoDB</li>
-
-          <li>PostgreSQL</li>
-
-          <li>MySQL</li>
-        </ul>
+        To make a more precise bond between service and database, the service
+        must adopt a <code class="text-red-300">.env</code> informing the
+        connection URL as instructed
+        <a
+          href="https://docs.mongodb.com/drivers/node/current/fundamentals/connection/"
+          class="underline"
+        >
+          here
+        </a>
       </li>
     </ul>
   </div>
